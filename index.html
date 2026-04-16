@@ -1,0 +1,791 @@
+<html>
+<head>
+<title>Computer VIRUS</title>
+<style>
+  :root {
+    --purple: #7F77DD; --purple-l: #EEEDFE; --purple-d: #3C3489;
+    --teal: #1D9E75; --teal-l: #E1F5EE; --teal-d: #085041;
+    --coral: #D85A30; --coral-l: #FAECE7; --coral-d: #712B13;
+    --pink: #D4537E; --pink-l: #FBEAF0; --pink-d: #72243E;
+    --amber: #BA7517; --amber-l: #FAEEDA; --amber-d: #633806;
+    --blue: #378ADD; --blue-l: #E6F1FB; --blue-d: #0C447C;
+    --green: #639922; --green-l: #EAF3DE; --green-d: #27500A;
+    --red: #E24B4A; --red-l: #FCEBEB; --red-d: #791F1F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans, system-ui, sans-serif); background: transparent; color: var(--color-text-primary); }
+  
+  .container{ width: min(1200px, 100%); margin-inline: auto; padding-inline: 15px; }
+  
+  #nav { display: flex; gap: 6px; flex-wrap: wrap; padding: 1rem 0 1.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1.5rem; }
+  .nav-btn { font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
+  .nav-btn:hover { background: var(--color-background-tertiary); }
+  .nav-btn.active { color: white; border-color: transparent; }
+
+  .section { display: none; animation: fadeIn 0.2s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hero { border-radius: var(--border-radius-lg); padding: 2rem; margin-bottom: 1.5rem; }
+  .hero-tag { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .hero h1 { font-size: 26px; font-weight: 500; line-height: 1.3; margin-bottom: 0.75rem; }
+  .hero p { font-size: 15px; line-height: 1.7; max-width: 640px; }
+
+  .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .chapter-card { border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); padding: 1rem; cursor: pointer; transition: all 0.15s; }
+  .chapter-card:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+  .chapter-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 16px; }
+  .chapter-card h3 { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .chapter-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  .type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+  .type-card { border-radius: var(--border-radius-lg); padding: 1.25rem; border: 0.5px solid var(--color-border-tertiary); }
+  .type-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 12px; margin-bottom: 10px; }
+  .type-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .type-card p { font-size: 13px; line-height: 1.6; color: var(--color-text-secondary); }
+  .type-card .danger-level { display: flex; gap: 3px; margin-top: 10px; }
+  .danger-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 1px; background: var(--color-border-secondary); }
+  .timeline-item { position: relative; margin-bottom: 1.5rem; }
+  .timeline-item::before { content: ''; position: absolute; left: -24px; top: 4px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid; }
+  .tl-purple::before { background: var(--purple-l); border-color: var(--purple); }
+  .tl-teal::before { background: var(--teal-l); border-color: var(--teal); }
+  .tl-coral::before { background: var(--coral-l); border-color: var(--coral); }
+  .tl-blue::before { background: var(--blue-l); border-color: var(--blue); }
+  .tl-amber::before { background: var(--amber-l); border-color: var(--amber); }
+  .tl-red::before { background: var(--red-l); border-color: var(--red); }
+  .timeline-year { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 2px; }
+  .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .timeline-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+  .info-block { border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; border: 0.5px solid var(--color-border-tertiary); }
+  .section-heading { font-size: 18px; font-weight: 500; margin-bottom: 1rem; }
+  .sub-heading { font-size: 15px; font-weight: 500; margin-bottom: 0.5rem; color: var(--color-text-primary); }
+  .body-text { font-size: 14px; line-height: 1.7; color: var(--color-text-secondary); }
+
+  .phase-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin: 1rem 0; }
+  .phase-step { border-radius: var(--border-radius-md); padding: 0.9rem; text-align: center; border: 0.5px solid var(--color-border-tertiary); }
+  .phase-num { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+  .phase-label { font-size: 12px; font-weight: 500; margin-bottom: 3px; }
+  .phase-desc { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  .tip-list { list-style: none; }
+  .tip-list li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 14px; line-height: 1.6; }
+  .tip-list li:last-child { border-bottom: none; }
+  .tip-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 11px; font-weight: 500; }
+
+  .quiz-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
+  .quiz-q { font-size: 14px; font-weight: 500; margin-bottom: 10px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+  .quiz-opt { font-size: 13px; padding: 8px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); cursor: pointer; transition: all 0.15s; background: var(--color-background-secondary); color: var(--color-text-primary); text-align: left; }
+  .quiz-opt:hover { background: var(--color-background-tertiary); }
+  .quiz-opt.correct { background: var(--teal-l); border-color: var(--teal); color: var(--teal-d); }
+  .quiz-opt.wrong { background: var(--red-l); border-color: var(--red); color: var(--red-d); }
+  .quiz-feedback { font-size: 12px; margin-top: 8px; padding: 6px 10px; border-radius: var(--border-radius-md); }
+
+  .glossary-item { padding: 12px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .glossary-term { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .glossary-def { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin: 1rem 0; }
+  .stat-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.9rem; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 500; margin-bottom: 2px; }
+  .stat-label { font-size: 11px; color: var(--color-text-secondary); }
+
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1rem 0; }
+  .vs-side { border-radius: var(--border-radius-lg); padding: 1.25rem; border: 0.5px solid var(--color-border-tertiary); }
+  .vs-side h3 { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+  .vs-side li { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; list-style: none; padding-left: 14px; position: relative; }
+  .vs-side li::before { content: '–'; position: absolute; left: 0; color: var(--color-text-secondary); }
+</style>
+</head>
+<body>
+<div class="container">
+<h2 class="sr-only">Computer virus documentation — a comprehensive school-friendly guide covering types, history, prevention, and more.</h2>
+
+<div id="nav">
+  <button class="nav-btn active" style="background:#534AB7;border-color:#534AB7;" onclick="showSection('home',this)">Home</button>
+  <button class="nav-btn" onclick="showSection('what',this)">What is a Virus?</button>
+  <button class="nav-btn" onclick="showSection('types',this)">Types</button>
+  <button class="nav-btn" onclick="showSection('malware',this)">Malware Family</button>
+  <button class="nav-btn" onclick="showSection('history',this)">History</button>
+  <button class="nav-btn" onclick="showSection('lifecycle',this)">How They Work</button>
+  <button class="nav-btn" onclick="showSection('effects',this)">Effects</button>
+  <button class="nav-btn" onclick="showSection('prevention',this)">Prevention</button>
+  <button class="nav-btn" onclick="showSection('quiz',this)">Quiz</button>
+  <button class="nav-btn" onclick="showSection('glossary',this)">Glossary</button>
+</div>
+
+<div id="home" class="section active">
+  <div class="hero" style="background:var(--purple-l);border:0.5px solid #AFA9EC;">
+    <div class="hero-tag" style="color:var(--purple-d);">Computer Science — Digital Safety</div>
+    <h1 style="color:var(--purple-d);">Computer Viruses<br>A Complete Guide</h1>
+    <p style="color:var(--purple-d);">Everything you need to know about computer viruses — what they are, how they spread, their many forms, and how to stay safe in the digital world.</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-num" style="color:var(--red);">450K+</div><div class="stat-label">New malware daily</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--amber);">$6T</div><div class="stat-label">Global cybercrime cost (2021)</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--teal);">1971</div><div class="stat-label">First virus ever</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--blue);">1B+</div><div class="stat-label">Malware programs exist</div></div>
+  </div>
+
+  <p class="section-heading" style="margin-top:1.5rem;">Chapters in this guide</p>
+  <div class="chapter-grid">
+    <div class="chapter-card" onclick="showSection('what',null)">
+      <div class="chapter-icon" style="background:var(--purple-l);color:var(--purple-d);">?</div>
+      <h3>What is a Virus?</h3>
+      <p>Definition, basics & how viruses differ from other software</p>
+    </div>
+    <div class="chapter-card" onclick="showSection('types',null)">
+      <div class="chapter-icon" style="background:var(--coral-l);color:var(--coral-d);">T</div>
+      <h3>Types of Viruses</h3>
+      <p>File, boot, macro, polymorphic and more</p>
+    </div>
+    <div class="chapter-card" onclick="showSection('malware',null)">
+      <div class="chapter-icon" style="background:var(--red-l);color:var(--red-d);">M</div>
+      <h3>Malware Family</h3>
+      <p>Trojans, worms, ransomware, spyware & more</p>
+    </div>
+    <div class="chapter-card" onclick="showSection('history',null)">
+      <div class="chapter-icon" style="background:var(--amber-l);color:var(--amber-d);">H</div>
+      <h3>History</h3>
+      <p>From Creeper (1971) to modern threats</p>
+    </div>
+    <div class="chapter-card" onclick="showSection('lifecycle',null)">
+      <div class="chapter-icon" style="background:var(--teal-l);color:var(--teal-d);">L</div>
+      <h3>How They Work</h3>
+      <p>The infection cycle, step by step</p>
+    </div>
+    <div class="chapter-card" onclick="showSection('effects',null)">
+      <div class="chapter-icon" style="background:var(--blue-l);color:var(--blue-d);">E</div>
+      <h3>Effects</h3>
+      <p>What viruses actually do to your system</p>
+    </div>
+    <div class="chapter-card" onclick="showSection('prevention',null)">
+      <div class="chapter-icon" style="background:var(--green-l);color:var(--green-d);">P</div>
+      <h3>Prevention</h3>
+      <p>Best practices & safety tips</p>
+    </div>
+    <div class="chapter-card" onclick="showSection('quiz',null)">
+      <div class="chapter-icon" style="background:var(--pink-l);color:var(--pink-d);">Q</div>
+      <h3>Quiz</h3>
+      <p>Test your knowledge</p>
+    </div>
+  </div>
+</div>
+
+<div id="what" class="section">
+  <div class="hero" style="background:var(--purple-l);border:0.5px solid #AFA9EC;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--purple-d);">Chapter 1</div>
+    <h1 style="color:var(--purple-d);">What is a Computer Virus?</h1>
+    <p style="color:var(--purple-d);">A computer virus is a type of malicious program that, like a biological virus, attaches itself to a host file and replicates itself to spread to other files and systems — often without the user knowing.</p>
+  </div>
+
+  <div class="vs-grid">
+    <div class="vs-side" style="background:var(--teal-l);border-color:#5DCAA5;">
+      <h3 style="color:var(--teal-d);">Biological Virus</h3>
+      <ul>
+        <li style="color:var(--teal-d);">Attaches to living cells</li>
+        <li style="color:var(--teal-d);">Replicates inside the host</li>
+        <li style="color:var(--teal-d);">Spreads through contact</li>
+        <li style="color:var(--teal-d);">Can cause harm or death</li>
+        <li style="color:var(--teal-d);">Needs a host to survive</li>
+      </ul>
+    </div>
+    <div class="vs-side" style="background:var(--coral-l);border-color:#F0997B;">
+      <h3 style="color:var(--coral-d);">Computer Virus</h3>
+      <ul>
+        <li style="color:var(--coral-d);">Attaches to program files</li>
+        <li style="color:var(--coral-d);">Replicates by copying code</li>
+        <li style="color:var(--coral-d);">Spreads via networks/drives</li>
+        <li style="color:var(--coral-d);">Can damage or steal data</li>
+        <li style="color:var(--coral-d);">Needs a program to activate</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-heading" style="margin-top:1.5rem;">Key characteristics</p>
+  <div class="info-block" style="background:var(--purple-l);border-color:#AFA9EC;">
+    <p class="sub-heading" style="color:var(--purple-d);">Self-replication</p>
+    <p class="body-text" style="color:var(--purple-d);">A computer virus copies its own code into other programs or files automatically. This is the defining feature that sets it apart from other software.</p>
+  </div>
+  <div class="info-block" style="background:var(--amber-l);border-color:#FAC775;">
+    <p class="sub-heading" style="color:var(--amber-d);">Requires a host</p>
+    <p class="body-text" style="color:var(--amber-d);">Unlike worms, viruses cannot run on their own. They need to attach themselves to an existing executable file, document, or boot sector to activate.</p>
+  </div>
+  <div class="info-block" style="background:var(--red-l);border-color:#F09595;">
+    <p class="sub-heading" style="color:var(--red-d);">Payload delivery</p>
+    <p class="body-text" style="color:var(--red-d);">Once activated, most viruses carry a "payload" — malicious actions such as deleting files, displaying unwanted messages, or stealing data.</p>
+  </div>
+  <div class="info-block" style="background:var(--teal-l);border-color:#5DCAA5;">
+    <p class="sub-heading" style="color:var(--teal-d);">Trigger conditions</p>
+    <p class="body-text" style="color:var(--teal-d);">Many viruses lie dormant until a trigger condition is met — such as a specific date, a number of replications, or a certain user action.</p>
+  </div>
+
+  <p class="section-heading">Virus vs other threats</p>
+  <div class="info-block">
+    <p class="body-text">People often use "virus" to mean all malicious software, but technically a <strong>virus</strong> must replicate by attaching to a host. A <strong>worm</strong> spreads by itself without needing a host. <strong>Ransomware</strong> encrypts files for money. A <strong>Trojan</strong> disguises itself as safe software. Together, all of these fall under the umbrella term <strong>malware</strong> (malicious software).</p>
+  </div>
+</div>
+
+<div id="types" class="section">
+  <div class="hero" style="background:var(--coral-l);border:0.5px solid #F0997B;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--coral-d);">Chapter 2</div>
+    <h1 style="color:var(--coral-d);">Types of Computer Viruses</h1>
+    <p style="color:var(--coral-d);">Viruses come in many forms depending on where they hide, how they spread, and what they target. Here are the major categories you need to know.</p>
+  </div>
+
+  <div class="type-grid">
+    <div class="type-card" style="background:var(--purple-l);border-color:#AFA9EC;">
+      <div class="type-badge" style="background:#EEEDFE;color:var(--purple-d);">Category 01</div>
+      <h3 style="color:var(--purple-d);">File Infector Virus</h3>
+      <p style="color:var(--purple-d);">Attaches to executable files (.exe, .com). When the infected file runs, the virus activates and infects other executable files on the system.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--coral-l);border-color:#F0997B;">
+      <div class="type-badge" style="background:#FAECE7;color:var(--coral-d);">Category 02</div>
+      <h3 style="color:var(--coral-d);">Boot Sector Virus</h3>
+      <p style="color:var(--coral-d);">Infects the master boot record (MBR) of a storage drive. Loads before the OS starts, making it very hard to detect and remove.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--amber-l);border-color:#FAC775;">
+      <div class="type-badge" style="background:#FAEEDA;color:var(--amber-d);">Category 03</div>
+      <h3 style="color:var(--amber-d);">Macro Virus</h3>
+      <p style="color:var(--amber-d);">Hides inside macro scripts in documents (Word, Excel). Spreads when infected documents are shared. Very common in the late 1990s.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--blue-l);border-color:#85B7EB;">
+      <div class="type-badge" style="background:#E6F1FB;color:var(--blue-d);">Category 04</div>
+      <h3 style="color:var(--blue-d);">Polymorphic Virus</h3>
+      <p style="color:var(--blue-d);">Changes its own code each time it replicates, making it very difficult for antivirus programs to detect using simple signature matching.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--red-l);border-color:#F09595;">
+      <div class="type-badge" style="background:#FCEBEB;color:var(--red-d);">Category 05</div>
+      <h3 style="color:var(--red-d);">Metamorphic Virus</h3>
+      <p style="color:var(--red-d);">The most advanced type — completely rewrites its own code on each infection. Even the behavior changes, making detection nearly impossible.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--teal-l);border-color:#5DCAA5;">
+      <div class="type-badge" style="background:#E1F5EE;color:var(--teal-d);">Category 06</div>
+      <h3 style="color:var(--teal-d);">Multipartite Virus</h3>
+      <p style="color:var(--teal-d);">Attacks both the boot sector and executable files at the same time, making it spread faster and harder to fully clean from a system.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--pink-l);border-color:#ED93B1;">
+      <div class="type-badge" style="background:#FBEAF0;color:var(--pink-d);">Category 07</div>
+      <h3 style="color:var(--pink-d);">Resident Virus</h3>
+      <p style="color:var(--pink-d);">Loads itself into RAM and stays there. It can infect any file the OS accesses, even antivirus programs themselves.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--green-l);border-color:#97C459;">
+      <div class="type-badge" style="background:#EAF3DE;color:var(--green-d);">Category 08</div>
+      <h3 style="color:var(--green-d);">Non-resident Virus</h3>
+      <p style="color:var(--green-d);">Does not load into RAM. It infects files only when the infected file is executed, then exits. Simpler but still destructive.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--amber-l);border-color:#FAC775;">
+      <div class="type-badge" style="background:#FAEEDA;color:var(--amber-d);">Category 09</div>
+      <h3 style="color:var(--amber-d);">Overwrite Virus</h3>
+      <p style="color:var(--amber-d);">Overwrites the original file content with its own code, permanently destroying the host file. The simplest and crudest type.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--blue-l);border-color:#85B7EB;">
+      <div class="type-badge" style="background:#E6F1FB;color:var(--blue-d);">Category 10</div>
+      <h3 style="color:var(--blue-d);">Network Virus</h3>
+      <p style="color:var(--blue-d);">Specifically designed to spread across computer networks via shared folders, email attachments, or network protocols.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--purple-l);border-color:#AFA9EC;">
+      <div class="type-badge" style="background:#EEEDFE;color:var(--purple-d);">Category 11</div>
+      <h3 style="color:var(--purple-d);">Stealth Virus</h3>
+      <p style="color:var(--purple-d);">Actively hides its presence by intercepting OS calls that check for infected files and reporting fake "clean" data to the OS.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+    <div class="type-card" style="background:var(--coral-l);border-color:#F0997B;">
+      <div class="type-badge" style="background:#FAECE7;color:var(--coral-d);">Category 12</div>
+      <h3 style="color:var(--coral-d);">Web Scripting Virus</h3>
+      <p style="color:var(--coral-d);">Exploits vulnerabilities in web browsers or websites using scripts (JavaScript, HTML). Infects by visiting a compromised page.</p>
+      <div class="danger-level"><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--red);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div><div class="danger-dot" style="background:var(--color-border-tertiary);"></div></div>
+    </div>
+  </div>
+  <p class="body-text" style="margin-top:0.5rem;"><span style="display:inline-flex;gap:3px;vertical-align:middle;"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;margin-top:4px;"></span></span> Danger level indicators (1–5 dots)</p>
+</div>
+
+<div id="malware" class="section">
+  <div class="hero" style="background:var(--red-l);border:0.5px solid #F09595;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--red-d);">Chapter 3</div>
+    <h1 style="color:var(--red-d);">The Malware Family</h1>
+    <p style="color:var(--red-d);">A virus is just one member of the malware family. Here's a complete look at all the malicious software types that exist in the digital world.</p>
+  </div>
+
+  <div class="type-grid">
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--red-l);color:var(--red-d);">Virus</div>
+      <h3>Computer Virus</h3>
+      <p>Attaches to a host file, replicates when the file is run, and can corrupt data, slow systems, or deliver damaging payloads.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--amber-l);color:var(--amber-d);">Worm</div>
+      <h3>Worm</h3>
+      <p>Spreads across networks independently — no host file needed. Can replicate thousands of copies very quickly, consuming bandwidth and crashing systems.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--blue-l);color:var(--blue-d);">Trojan</div>
+      <h3>Trojan Horse</h3>
+      <p>Disguises itself as legitimate software. Once installed, it opens backdoors for attackers, steals data, or installs other malware.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--coral-l);color:var(--coral-d);">Ransomware</div>
+      <h3>Ransomware</h3>
+      <p>Encrypts the victim's files and demands payment (ransom) for the decryption key. One of the most financially damaging threats today.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--purple-l);color:var(--purple-d);">Spyware</div>
+      <h3>Spyware</h3>
+      <p>Secretly monitors and collects user activity — keystrokes, browsing, passwords — and sends the data to a remote attacker.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--pink-l);color:var(--pink-d);">Adware</div>
+      <h3>Adware</h3>
+      <p>Displays unwanted advertisements, often while tracking browsing habits. Usually not destructive but very annoying and invasive.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--teal-l);color:var(--teal-d);">Rootkit</div>
+      <h3>Rootkit</h3>
+      <p>Hides deep within the OS, often at the kernel level. Gives attackers persistent, undetected control over the compromised system.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--green-l);color:var(--green-d);">Keylogger</div>
+      <h3>Keylogger</h3>
+      <p>Records every keystroke a user types, capturing passwords, credit card numbers, messages, and other sensitive information.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--amber-l);color:var(--amber-d);">Botnet</div>
+      <h3>Botnet</h3>
+      <p>Turns infected computers into "bots" controlled by an attacker. Networks of thousands of bots are used to launch DDoS attacks or send spam.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--coral-l);color:var(--coral-d);">Fileless</div>
+      <h3>Fileless Malware</h3>
+      <p>Operates entirely in RAM without writing to the hard drive. Since no files are created, traditional antivirus tools struggle to detect it.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--blue-l);color:var(--blue-d);">Scareware</div>
+      <h3>Scareware</h3>
+      <p>Tricks users into believing their device is infected, then sells fake security software. Classic social engineering.</p>
+    </div>
+    <div class="type-card">
+      <div class="type-badge" style="background:var(--purple-l);color:var(--purple-d);">Logic Bomb</div>
+      <h3>Logic Bomb</h3>
+      <p>Malicious code that stays dormant until a specific trigger (date, event, action) activates it — then executes its payload.</p>
+    </div>
+  </div>
+</div>
+
+<div id="history" class="section">
+  <div class="hero" style="background:var(--amber-l);border:0.5px solid #FAC775;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--amber-d);">Chapter 4</div>
+    <h1 style="color:var(--amber-d);">A History of Computer Viruses</h1>
+    <p style="color:var(--amber-d);">From a simple self-replicating experiment in 1971 to billion-dollar cyberattacks today — the evolution of computer viruses is a fascinating and cautionary tale.</p>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item tl-teal">
+      <div class="timeline-year">1971</div>
+      <div class="timeline-title">Creeper — The First</div>
+      <div class="timeline-desc">The Creeper program spread through ARPANET, displaying "I'm the creeper, catch me if you can!" It was actually an experimental self-replicating program, not malicious.</div>
+    </div>
+    <div class="timeline-item tl-purple">
+      <div class="timeline-year">1982</div>
+      <div class="timeline-title">Elk Cloner</div>
+      <div class="timeline-desc">The first virus to spread "in the wild" (outside a lab). It infected Apple II floppy disks and displayed a poem on every 50th boot.</div>
+    </div>
+    <div class="timeline-item tl-coral">
+      <div class="timeline-year">1986</div>
+      <div class="timeline-title">Brain — First PC Virus</div>
+      <div class="timeline-desc">Created by two Pakistani brothers, Brain infected the boot sector of IBM PC floppy disks. It was reportedly written to track pirated medical software.</div>
+    </div>
+    <div class="timeline-item tl-blue">
+      <div class="timeline-year">1988</div>
+      <div class="timeline-title">Morris Worm</div>
+      <div class="timeline-desc">One of the first worms distributed via the internet. It infected ~6,000 machines (about 10% of the internet then) and caused millions in damages.</div>
+    </div>
+    <div class="timeline-item tl-amber">
+      <div class="timeline-year">1999</div>
+      <div class="timeline-title">Melissa Virus</div>
+      <div class="timeline-desc">A macro virus that spread via infected Word documents in emails. It overwhelmed mail servers, causing $80 million in damages worldwide.</div>
+    </div>
+    <div class="timeline-item tl-red">
+      <div class="timeline-year">2000</div>
+      <div class="timeline-title">ILOVEYOU</div>
+      <div class="timeline-desc">The "Love Bug" spread via email disguised as a love letter. It infected 45 million Windows machines in 10 days and caused $10 billion in damage.</div>
+    </div>
+    <div class="timeline-item tl-purple">
+      <div class="timeline-year">2003</div>
+      <div class="timeline-title">Blaster Worm</div>
+      <div class="timeline-desc">Exploited a Windows vulnerability to spread rapidly. When it activated, it triggered a continuous shutdown loop on infected computers.</div>
+    </div>
+    <div class="timeline-item tl-teal">
+      <div class="timeline-year">2004</div>
+      <div class="timeline-title">MyDoom</div>
+      <div class="timeline-desc">The fastest-spreading email worm ever recorded. At its peak, it was responsible for 1 in 4 emails sent worldwide.</div>
+    </div>
+    <div class="timeline-item tl-coral">
+      <div class="timeline-year">2010</div>
+      <div class="timeline-title">Stuxnet</div>
+      <div class="timeline-desc">A sophisticated cyberweapon that targeted Iran's nuclear centrifuges. Believed to be the first malware designed to cause real-world physical damage.</div>
+    </div>
+    <div class="timeline-item tl-red">
+      <div class="timeline-year">2017</div>
+      <div class="timeline-title">WannaCry Ransomware</div>
+      <div class="timeline-desc">Infected 230,000 computers in 150 countries, encrypting files and demanding Bitcoin. Crippled the UK's National Health Service.</div>
+    </div>
+    <div class="timeline-item tl-amber">
+      <div class="timeline-year">2020–present</div>
+      <div class="timeline-title">Modern Threats</div>
+      <div class="timeline-desc">AI-powered malware, supply chain attacks (SolarWinds), ransomware-as-a-service, and state-sponsored cyberwarfare define the current era.</div>
+    </div>
+  </div>
+</div>
+
+<div id="lifecycle" class="section">
+  <div class="hero" style="background:var(--teal-l);border:0.5px solid #5DCAA5;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--teal-d);">Chapter 5</div>
+    <h1 style="color:var(--teal-d);">How Computer Viruses Work</h1>
+    <p style="color:var(--teal-d);">Every virus follows a lifecycle — from the moment it enters a system to when it executes its payload. Understanding this helps us defend against it.</p>
+  </div>
+
+  <p class="section-heading">The infection lifecycle</p>
+  <div class="phase-steps">
+    <div class="phase-step" style="background:var(--purple-l);border-color:#AFA9EC;">
+      <div class="phase-num" style="color:var(--purple-d);">1</div>
+      <div class="phase-label" style="color:var(--purple-d);">Entry</div>
+      <div class="phase-desc" style="color:var(--purple-d);">Virus enters via email, download, USB, network, or malicious website</div>
+    </div>
+    <div class="phase-step" style="background:var(--blue-l);border-color:#85B7EB;">
+      <div class="phase-num" style="color:var(--blue-d);">2</div>
+      <div class="phase-label" style="color:var(--blue-d);">Dormancy</div>
+      <div class="phase-desc" style="color:var(--blue-d);">Virus lies dormant, waiting for a trigger condition before activating</div>
+    </div>
+    <div class="phase-step" style="background:var(--amber-l);border-color:#FAC775;">
+      <div class="phase-num" style="color:var(--amber-d);">3</div>
+      <div class="phase-label" style="color:var(--amber-d);">Propagation</div>
+      <div class="phase-desc" style="color:var(--amber-d);">Virus replicates itself, infecting more files, folders, or systems</div>
+    </div>
+    <div class="phase-step" style="background:var(--coral-l);border-color:#F0997B;">
+      <div class="phase-num" style="color:var(--coral-d);">4</div>
+      <div class="phase-label" style="color:var(--coral-d);">Trigger</div>
+      <div class="phase-desc" style="color:var(--coral-d);">A condition (date, action, count) activates the virus from dormancy</div>
+    </div>
+    <div class="phase-step" style="background:var(--red-l);border-color:#F09595;">
+      <div class="phase-num" style="color:var(--red-d);">5</div>
+      <div class="phase-label" style="color:var(--red-d);">Execution</div>
+      <div class="phase-desc" style="color:var(--red-d);">The payload runs — deletes files, encrypts data, or contacts attacker</div>
+    </div>
+  </div>
+
+  <p class="section-heading" style="margin-top:1.5rem;">Common spread methods</p>
+  <div class="info-block" style="background:var(--blue-l);border-color:#85B7EB;">
+    <p class="sub-heading" style="color:var(--blue-d);">Email attachments</p>
+    <p class="body-text" style="color:var(--blue-d);">The most common method. An infected .exe, Word doc, PDF, or ZIP is sent as an email attachment. The virus activates when the file is opened.</p>
+  </div>
+  <div class="info-block" style="background:var(--amber-l);border-color:#FAC775;">
+    <p class="sub-heading" style="color:var(--amber-d);">Malicious downloads</p>
+    <p class="body-text" style="color:var(--amber-d);">Free software, cracks, keygens, and torrents often bundle viruses. The user installs what they think is a game or tool — but it's a trojan.</p>
+  </div>
+  <div class="info-block" style="background:var(--coral-l);border-color:#F0997B;">
+    <p class="sub-heading" style="color:var(--coral-d);">USB drives</p>
+    <p class="body-text" style="color:var(--coral-d);">Viruses can infect USB drives and jump to any computer they're plugged into. The Stuxnet virus famously used USB drives to reach air-gapped nuclear systems.</p>
+  </div>
+  <div class="info-block" style="background:var(--purple-l);border-color:#AFA9EC;">
+    <p class="sub-heading" style="color:var(--purple-d);">Drive-by downloads</p>
+    <p class="body-text" style="color:var(--purple-d);">Just visiting a malicious or compromised website can trigger an automatic download and installation of malware without any user interaction.</p>
+  </div>
+  <div class="info-block" style="background:var(--teal-l);border-color:#5DCAA5;">
+    <p class="sub-heading" style="color:var(--teal-d);">Network shares</p>
+    <p class="body-text" style="color:var(--teal-d);">In corporate or school networks, viruses can spread through shared drives. Infecting one machine can quickly spread to hundreds of others.</p>
+  </div>
+</div>
+
+<div id="effects" class="section">
+  <div class="hero" style="background:var(--blue-l);border:0.5px solid #85B7EB;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--blue-d);">Chapter 6</div>
+    <h1 style="color:var(--blue-d);">Effects of Computer Viruses</h1>
+    <p style="color:var(--blue-d);">The impact of a virus can range from mildly annoying to catastrophically destructive — on individuals, organizations, and even entire nations.</p>
+  </div>
+
+  <div class="type-grid">
+    <div class="type-card" style="background:var(--amber-l);border-color:#FAC775;">
+      <div class="type-badge" style="background:#FAEEDA;color:var(--amber-d);">Performance</div>
+      <h3 style="color:var(--amber-d);">System slowdowns</h3>
+      <p style="color:var(--amber-d);">Viruses consume CPU, RAM, and disk resources while running in the background, making the system noticeably slower.</p>
+    </div>
+    <div class="type-card" style="background:var(--red-l);border-color:#F09595;">
+      <div class="type-badge" style="background:#FCEBEB;color:var(--red-d);">Data</div>
+      <h3 style="color:var(--red-d);">File corruption or deletion</h3>
+      <p style="color:var(--red-d);">Many viruses overwrite, encrypt, or permanently delete files — documents, photos, videos, and even system files.</p>
+    </div>
+    <div class="type-card" style="background:var(--purple-l);border-color:#AFA9EC;">
+      <div class="type-badge" style="background:#EEEDFE;color:var(--purple-d);">Privacy</div>
+      <h3 style="color:var(--purple-d);">Data theft</h3>
+      <p style="color:var(--purple-d);">Viruses can steal passwords, banking credentials, personal photos, identity information, and send them to attackers.</p>
+    </div>
+    <div class="type-card" style="background:var(--coral-l);border-color:#F0997B;">
+      <div class="type-badge" style="background:#FAECE7;color:var(--coral-d);">Financial</div>
+      <h3 style="color:var(--coral-d);">Financial loss</h3>
+      <p style="color:var(--coral-d);">Ransomware demands payment. Banking trojans steal money. Business downtime causes massive revenue losses. Globally, trillions of dollars are lost yearly.</p>
+    </div>
+    <div class="type-card" style="background:var(--teal-l);border-color:#5DCAA5;">
+      <div class="type-badge" style="background:#E1F5EE;color:var(--teal-d);">Network</div>
+      <h3 style="color:var(--teal-d);">Network disruption</h3>
+      <p style="color:var(--teal-d);">Worms consume all available network bandwidth, effectively taking down an organization's internet connection through sheer replication volume.</p>
+    </div>
+    <div class="type-card" style="background:var(--pink-l);border-color:#ED93B1;">
+      <div class="type-badge" style="background:#FBEAF0;color:var(--pink-d);">Reputation</div>
+      <h3 style="color:var(--pink-d);">Reputational damage</h3>
+      <p style="color:var(--pink-d);">Businesses that suffer data breaches lose customer trust. Schools, hospitals, and governments face enormous public criticism after cyberattacks.</p>
+    </div>
+  </div>
+
+  <p class="section-heading" style="margin-top:0.5rem;">Warning signs your device may be infected</p>
+  <ul class="tip-list">
+    <li><div class="tip-icon" style="background:var(--red-l);color:var(--red-d);">!</div>Your computer is running much slower than usual</li>
+    <li><div class="tip-icon" style="background:var(--amber-l);color:var(--amber-d);">!</div>Programs open or close on their own without your input</li>
+    <li><div class="tip-icon" style="background:var(--coral-l);color:var(--coral-d);">!</div>Your browser homepage has changed without you doing it</li>
+    <li><div class="tip-icon" style="background:var(--purple-l);color:var(--purple-d);">!</div>You see lots of unexpected pop-up ads or error messages</li>
+    <li><div class="tip-icon" style="background:var(--blue-l);color:var(--blue-d);">!</div>Files are missing or have been renamed strangely</li>
+    <li><div class="tip-icon" style="background:var(--teal-l);color:var(--teal-d);">!</div>Your antivirus is suddenly disabled or won't open</li>
+    <li><div class="tip-icon" style="background:var(--pink-l);color:var(--pink-d);">!</div>Your contacts receive strange emails or messages from your account</li>
+  </ul>
+</div>
+
+<div id="prevention" class="section">
+  <div class="hero" style="background:var(--green-l);border:0.5px solid #97C459;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--green-d);">Chapter 7</div>
+    <h1 style="color:var(--green-d);">Prevention & Protection</h1>
+    <p style="color:var(--green-d);">The best defence against viruses is prevention. Most infections are completely avoidable with good digital habits and the right tools.</p>
+  </div>
+
+  <p class="section-heading">Essential protection tips</p>
+  <ul class="tip-list">
+    <li><div class="tip-icon" style="background:var(--teal-l);color:var(--teal-d);">1</div><div><strong>Install reputable antivirus software</strong> — Use trusted antivirus programs like Windows Defender, Malwarebytes, or Avast. Keep them updated so they can detect the newest threats.</div></li>
+    <li><div class="tip-icon" style="background:var(--blue-l);color:var(--blue-d);">2</div><div><strong>Keep your OS and software updated</strong> — Most viruses exploit known vulnerabilities. Software updates patch these holes. Enable automatic updates wherever possible.</div></li>
+    <li><div class="tip-icon" style="background:var(--purple-l);color:var(--purple-d);">3</div><div><strong>Never open suspicious email attachments</strong> — If you don't recognize the sender, or the email seems odd even from someone you know, don't open attachments or click links.</div></li>
+    <li><div class="tip-icon" style="background:var(--amber-l);color:var(--amber-d);">4</div><div><strong>Download software only from official sources</strong> — Avoid pirated software, cracks, or unofficial download sites. Use official app stores or the developer's own website.</div></li>
+    <li><div class="tip-icon" style="background:var(--coral-l);color:var(--coral-d);">5</div><div><strong>Be careful with USB drives</strong> — Unknown USB drives can contain viruses. Don't plug in drives found in public places. Scan all external drives before opening them.</div></li>
+    <li><div class="tip-icon" style="background:var(--green-l);color:var(--green-d);">6</div><div><strong>Back up your data regularly</strong> — If infected, backups let you restore your files. Use the 3-2-1 rule: 3 copies, 2 different media, 1 offsite (cloud).</div></li>
+    <li><div class="tip-icon" style="background:var(--pink-l);color:var(--pink-d);">7</div><div><strong>Use strong, unique passwords</strong> — A strong password reduces the risk of a compromised account being used to spread malware to others.</div></li>
+    <li><div class="tip-icon" style="background:var(--teal-l);color:var(--teal-d);">8</div><div><strong>Enable your firewall</strong> — A firewall monitors incoming and outgoing network traffic, blocking many types of network-based viruses and attacks.</div></li>
+    <li><div class="tip-icon" style="background:var(--blue-l);color:var(--blue-d);">9</div><div><strong>Use HTTPS websites only</strong> — Look for the padlock in the browser address bar. HTTPS encrypts your connection, reducing the risk of drive-by malware injection.</div></li>
+    <li><div class="tip-icon" style="background:var(--amber-l);color:var(--amber-d);">10</div><div><strong>Educate yourself and others</strong> — Most cyberattacks begin with human error. Learning to spot phishing emails, fake websites, and social engineering is your strongest defence.</div></li>
+  </ul>
+
+  <p class="section-heading" style="margin-top:1.5rem;">How antivirus software works</p>
+  <div class="phase-steps">
+    <div class="phase-step" style="background:var(--blue-l);border-color:#85B7EB;">
+      <div class="phase-label" style="color:var(--blue-d);">Signature detection</div>
+      <div class="phase-desc" style="color:var(--blue-d);">Matches known virus "fingerprints" from a database of millions of signatures</div>
+    </div>
+    <div class="phase-step" style="background:var(--purple-l);border-color:#AFA9EC;">
+      <div class="phase-label" style="color:var(--purple-d);">Heuristic analysis</div>
+      <div class="phase-desc" style="color:var(--purple-d);">Detects suspicious behaviour patterns that resemble how viruses act</div>
+    </div>
+    <div class="phase-step" style="background:var(--teal-l);border-color:#5DCAA5;">
+      <div class="phase-label" style="color:var(--teal-d);">Sandboxing</div>
+      <div class="phase-desc" style="color:var(--teal-d);">Runs unknown files in an isolated virtual environment to observe their behaviour safely</div>
+    </div>
+    <div class="phase-step" style="background:var(--amber-l);border-color:#FAC775;">
+      <div class="phase-label" style="color:var(--amber-d);">Real-time scanning</div>
+      <div class="phase-desc" style="color:var(--amber-d);">Continuously monitors all file access, downloads, and program execution in the background</div>
+    </div>
+    <div class="phase-step" style="background:var(--green-l);border-color:#97C459;">
+      <div class="phase-label" style="color:var(--green-d);">Cloud intelligence</div>
+      <div class="phase-desc" style="color:var(--green-d);">Sends suspicious file hashes to cloud servers for community-driven, up-to-the-minute threat data</div>
+    </div>
+  </div>
+</div>
+
+<div id="quiz" class="section">
+  <div class="hero" style="background:var(--pink-l);border:0.5px solid #ED93B1;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--pink-d);">Chapter 8</div>
+    <h1 style="color:var(--pink-d);">Test Your Knowledge</h1>
+    <p style="color:var(--pink-d);">Answer these questions to see how much you've learned. Click any option to check your answer.</p>
+  </div>
+
+  <div id="score-bar" style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding:12px 16px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);">
+    <span style="font-size:13px;color:var(--color-text-secondary);">Score:</span>
+    <span id="score-num" style="font-size:18px;font-weight:500;color:var(--teal);">0 / 8</span>
+    <span style="font-size:12px;color:var(--color-text-secondary);margin-left:auto;">Click an answer to check it</span>
+  </div>
+
+  <div id="q1" class="quiz-card">
+    <div class="quiz-q">1. What is the key feature that defines a computer virus (unlike other malware)?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">It encrypts user files for ransom</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',true)">It attaches to a host file and self-replicates</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">It monitors keystrokes silently</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">It spreads without any host file</button>
+    </div>
+  </div>
+
+  <div id="q2" class="quiz-card">
+    <div class="quiz-q">2. Which was the first computer virus to spread "in the wild" on Apple II computers?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">Melissa</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">Creeper</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',true)">Elk Cloner</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">Brain</button>
+    </div>
+  </div>
+
+  <div id="q3" class="quiz-card">
+    <div class="quiz-q">3. A polymorphic virus is dangerous because it...</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">Attacks both the boot sector and files at once</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',true)">Changes its own code each time it replicates</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">Loads itself permanently into RAM</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">Pretends to be antivirus software</button>
+    </div>
+  </div>
+
+  <div id="q4" class="quiz-card">
+    <div class="quiz-q">4. What type of malware spreads across networks without needing a host file?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Trojan</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',true)">Worm</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Macro virus</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Adware</button>
+    </div>
+  </div>
+
+  <div id="q5" class="quiz-card">
+    <div class="quiz-q">5. The WannaCry attack in 2017 was primarily an example of which type of malware?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">Spyware</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">Adware</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',true)">Ransomware</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">Logic Bomb</button>
+    </div>
+  </div>
+
+  <div id="q6" class="quiz-card">
+    <div class="quiz-q">6. Which virus famously targeted Iran's nuclear centrifuges causing real-world physical damage?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">MyDoom</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">Melissa</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">Blaster</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',true)">Stuxnet</button>
+    </div>
+  </div>
+
+  <div id="q7" class="quiz-card">
+    <div class="quiz-q">7. A virus that hides by reporting fake "clean" data to the OS is called a...</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q7',false)">Resident virus</button>
+      <button class="quiz-opt" onclick="answer(this,'q7',true)">Stealth virus</button>
+      <button class="quiz-opt" onclick="answer(this,'q7',false)">Boot sector virus</button>
+      <button class="quiz-opt" onclick="answer(this,'q7',false)">Fileless malware</button>
+    </div>
+  </div>
+
+  <div id="q8" class="quiz-card">
+    <div class="quiz-q">8. Which is NOT a recommended way to protect against viruses?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q8',false)">Keeping your OS updated</button>
+      <button class="quiz-opt" onclick="answer(this,'q8',false)">Backing up your data regularly</button>
+      <button class="quiz-opt" onclick="answer(this,'q8',true)">Downloading software from unofficial torrent sites</button>
+      <button class="quiz-opt" onclick="answer(this,'q8',false)">Using reputable antivirus software</button>
+    </div>
+  </div>
+</div>
+
+<div id="glossary" class="section">
+  <div class="hero" style="background:var(--blue-l);border:0.5px solid #85B7EB;margin-bottom:1.5rem;">
+    <div class="hero-tag" style="color:var(--blue-d);">Chapter 9</div>
+    <h1 style="color:var(--blue-d);">Glossary of Key Terms</h1>
+    <p style="color:var(--blue-d);">A quick-reference dictionary of all the important terms used in computer virus and cybersecurity topics.</p>
+  </div>
+  <div id="glossary-list">
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Antivirus</div><div class="glossary-def">Software designed to detect, prevent, and remove malicious programs from a computer system.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Botnet</div><div class="glossary-def">A network of computers infected with malware and controlled remotely by an attacker for coordinated malicious activities.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">DDoS Attack</div><div class="glossary-def">Distributed Denial of Service — overwhelming a server with traffic from many infected machines until it crashes.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Encryption</div><div class="glossary-def">The process of encoding data so only authorized parties can read it. Used by ransomware to lock victim files.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Exploit</div><div class="glossary-def">A piece of code or technique that takes advantage of a vulnerability (bug) in software to cause unintended behavior.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Firewall</div><div class="glossary-def">A security system that monitors and controls incoming and outgoing network traffic based on predefined rules.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Heuristic analysis</div><div class="glossary-def">A method antivirus software uses to detect unknown viruses by identifying suspicious behaviors rather than known signatures.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Keylogger</div><div class="glossary-def">Malware that records every keystroke made on a keyboard, capturing passwords, messages, and sensitive information.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Malware</div><div class="glossary-def">An umbrella term for all malicious software, including viruses, worms, trojans, ransomware, spyware, and more.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Payload</div><div class="glossary-def">The malicious action a virus or malware performs after activation — deleting files, stealing data, displaying messages, etc.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Phishing</div><div class="glossary-def">A social engineering attack where fake emails, texts, or websites trick users into revealing credentials or downloading malware.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Quarantine</div><div class="glossary-def">When antivirus software isolates an infected file, preventing it from running or spreading without deleting it immediately.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Ransomware</div><div class="glossary-def">Malware that encrypts a victim's files and demands a ransom payment (usually in cryptocurrency) for the decryption key.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Rootkit</div><div class="glossary-def">A type of malware that hides itself deep within the operating system, often at kernel level, to avoid detection.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Sandbox</div><div class="glossary-def">An isolated virtual environment where suspicious programs can run safely to observe their behavior without risk to the real system.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Signature</div><div class="glossary-def">A unique pattern of code that identifies a specific known virus, used by antivirus databases to detect that virus.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Social engineering</div><div class="glossary-def">Psychological manipulation that tricks people into making security mistakes, like clicking malicious links or revealing passwords.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Spyware</div><div class="glossary-def">Malware that secretly collects data about a user's activities and sends it to a remote attacker without the user's knowledge.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Trojan horse</div><div class="glossary-def">Malware disguised as legitimate or useful software that performs hidden malicious actions once installed.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Vulnerability</div><div class="glossary-def">A weakness or flaw in software, hardware, or a process that can be exploited by malware or attackers.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Worm</div><div class="glossary-def">A type of malware that self-replicates and spreads across networks independently, without needing to attach to a host file.</div></div>
+    <div class="glossary-item"><div class="glossary-term" style="color:var(--purple);">Zero-day</div><div class="glossary-def">A vulnerability that is unknown to the software vendor and has no patch available, making it extremely dangerous to exploit.</div></div>
+  </div>
+</div>
+</div>
+<script>
+  let scores = {};
+  let correctCount = 0;
+  const totalQ = 8;
+
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.classList.remove('active');
+      b.style.background = '';
+      b.style.borderColor = '';
+      b.style.color = '';
+    });
+    if (btn) {
+      btn.classList.add('active');
+      btn.style.background = '#534AB7';
+      btn.style.borderColor = '#534AB7';
+      btn.style.color = 'white';
+    } else {
+      const navBtns = document.querySelectorAll('.nav-btn');
+      const map = {home:0,what:1,types:2,malware:3,history:4,lifecycle:5,effects:6,prevention:7,quiz:8,glossary:9};
+      const b = navBtns[map[id]];
+      if(b){ b.classList.add('active'); b.style.background='#534AB7'; b.style.borderColor='#534AB7'; b.style.color='white'; }
+    }
+  }
+
+  function answer(btn, qid, correct) {
+    if (scores[qid] !== undefined) return;
+    scores[qid] = correct;
+    if (correct) correctCount++;
+
+    const opts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+    opts.forEach(o => { o.style.pointerEvents = 'none'; });
+    btn.classList.add(correct ? 'correct' : 'wrong');
+
+    if (!correct) {
+      opts.forEach(o => {
+        if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+      });
+    }
+
+    const fb = document.createElement('div');
+    fb.className = 'quiz-feedback';
+    fb.style.background = correct ? 'var(--teal-l)' : 'var(--red-l)';
+    fb.style.color = correct ? 'var(--teal-d)' : 'var(--red-d)';
+    fb.textContent = correct ? 'Correct! Well done.' : 'Not quite — the correct answer is highlighted in green.';
+    btn.closest('.quiz-card').appendChild(fb);
+
+    document.getElementById('score-num').textContent = correctCount + ' / ' + totalQ;
+    document.getElementById('score-num').style.color = correctCount >= 6 ? 'var(--teal)' : correctCount >= 4 ? 'var(--amber)' : 'var(--red)';
+  }
+</script>
+</body>
+</html>
